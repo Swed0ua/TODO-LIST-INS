@@ -8,7 +8,7 @@ import { logout } from '../../../store/authSlice';
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch( )
 
   const goToLogin = () => {
     navigate('/login');
