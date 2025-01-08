@@ -2,6 +2,7 @@
   "name": "oshop",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://swed0ua.github.io/TODO-LIST-INS",
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",
     "cra-template-typescript": "1.2.0",
@@ -42,6 +43,7 @@
     "@types/firebase": "^3.2.3",
     "@types/react": "^19.0.3",
     "@types/react-dom": "^19.0.2",
+    "gh-pages": "^6.3.0",
     "tailwindcss": "^3.4.17"
   }
 }
