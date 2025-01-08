@@ -1,11 +1,14 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../store/store";
+import { AuthHandlerInstance } from "../../../handlers/authHandlers";
+import { logout } from '../../../store/authSlice';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const dispatch = useDispatch()
 
   const goToLogin = () => {
     navigate('/login');
@@ -15,8 +18,14 @@ const Header: React.FC = () => {
     navigate('/');
   };
 
-  const logOutHandler = () => {
-
+  const logOutHandler = async () => {
+    try {
+      await AuthHandlerInstance.logoutUser()
+      dispatch(logout());
+      goToLogin()
+    } catch (error: any) {
+        console.error('Unlogin error:', error.message);
+    }
   }
 
   return (
