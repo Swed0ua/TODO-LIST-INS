@@ -9,6 +9,8 @@ import MainBtn from "../MainBtn";
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const displayName = useSelector((state: RootState) => state.auth.user?.displayName);
+  const userEmail = useSelector((state: RootState) => state.auth.user?.userEmail);
   const dispatch = useDispatch( )
 
   const goToLogin = () => {
@@ -36,15 +38,11 @@ const Header: React.FC = () => {
         To-Do App
       </div>
       <nav className="hidden md:flex space-x-6">
-        <a href="#" className="hover:text-gray-300 transition-colors duration-200">
-          Головна
-        </a>
-        <a href="#" className="hover:text-gray-300 transition-colors duration-200">
-          Про нас
-        </a>
-        <a href="#" className="hover:text-gray-300 transition-colors duration-200">
-          Контакти
-        </a>
+          {isAuthenticated &&
+            <a href="#" className="hover:text-gray-300 transition-colors duration-200">
+              {displayName ? displayName : "user"} <span className="text-blue-400">[ {userEmail} ] </span>
+            </a>
+          }
       </nav>
       
       <div>

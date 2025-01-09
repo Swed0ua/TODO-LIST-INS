@@ -7,9 +7,10 @@ import { TodoAdderComponent } from '../../../TodoAdderComponent';
 interface TodoListProps {
     list: TodoListResponce;
     userEmail: string;
+    fetchTodos: () => void;
 }
 
-export const TodoList: React.FC<TodoListProps> = ({ list, userEmail }) => {
+export const TodoList: React.FC<TodoListProps> = ({ list, userEmail, fetchTodos }) => {
     const [newTaskName, setNewTaskName] = useState(''); 
     const [isAdding, setIsAdding] = useState(false); 
 
@@ -19,28 +20,46 @@ export const TodoList: React.FC<TodoListProps> = ({ list, userEmail }) => {
     }
 
     const handleDelete = async () => {
-        // await TodosHandlerInstance.deleteTodoList(list.id.toString())
+        await TodosHandlerInstance.deleteTodoList(list.id.toString())
+        fetchTodos()
     };
 
-    const handleOnDeleteItem = async () => {
-        // Реалізація видалення завдання
-    };
-
-    const handleOnUpdateItem = async () => {
-        // Реалізація оновлення завдання
-    };
-
-    const handleAddItem = async () => {
-        if (newTaskName.trim() === '') return; // Перевірка, щоб назва не була порожньою
-
+    const handleOnDeleteItem = async (itemId:string) => {
         try {
-            const newTask = await TodosHandlerInstance.addTodoListItem(list.id.toString(), newTaskName);
-            setNewTaskName(''); // Очистка поля вводу
-            setIsAdding(false); // Закриття форми
-            list.tasks.push(newTask); // Оновлення локального списку завдань
+            const newTask = await TodosHandlerInstance.deleteTodoItem(itemId, list.id.toString());
+            setNewTaskName('');
+            setIsAdding(false);
+            list.tasks.push(newTask);
         } catch (error) {
             console.error('Failed to add task:', error);
         }
+        fetchTodos()
+    };
+
+    const handleOnUpdateItem = async (itemId: string, data: updatedTask) => {
+        try {
+            const newTask = await TodosHandlerInstance.updateTodoItem(list.id.toString(), itemId, data );
+            setNewTaskName('');
+            setIsAdding(false);
+            list.tasks.push(newTask);
+        } catch (error) {
+            console.error('Failed to add task:', error);
+        }
+        fetchTodos()
+    };
+
+    const handleAddItem = async () => {
+        if (newTaskName.trim() === '') return; 
+
+        try {
+            const newTask = await TodosHandlerInstance.addTodoListItem(list.id.toString(), newTaskName);
+            setNewTaskName(''); 
+            setIsAdding(false); 
+            list.tasks.push(newTask); 
+        } catch (error) {
+            console.error('Failed to add task:', error);
+        }
+        fetchTodos()
     };
 
     return (
@@ -50,10 +69,10 @@ export const TodoList: React.FC<TodoListProps> = ({ list, userEmail }) => {
                 {hasAccess && <button onClick={handleDelete}>Delete</button>}
             </div>
             <div className="todosList__Container">
-                {list.tasks.map(({ title, completed, id }) => (
+                {list.tasks.map(({ title, state, id }) => (
                     <TodoItem
                         key={id}
-                        task={{ id, title, completed }}
+                        task={{ id, title, state }}
                         onDelete={handleOnDeleteItem}
                         onUpdate={handleOnUpdateItem}
                         hasAccess={hasAccess}

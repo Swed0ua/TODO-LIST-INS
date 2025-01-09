@@ -4,9 +4,9 @@ interface TodoItemProps {
     task: {
         id: string;
         title: string;
-        completed: boolean;
+        state: boolean;
     };
-    onUpdate: (id: string, updatedTask: { text?: string; completed?: boolean }) => void;
+    onUpdate: (id: string, updatedTask: updatedTask) => void;
     onDelete: (id: string) => void;
     hasAccess: boolean;
 }
@@ -16,12 +16,12 @@ export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdate, onDelete, ha
     const [text, setText] = useState(task.title);
 
     const handleSave = () => {
-        onUpdate(task.id, { text });
+        onUpdate(task.id, { title:text });
         setIsEditing(false);
     };
 
     const toggleCompleted = () => {
-        onUpdate(task.id, { completed: !task.completed });
+        onUpdate(task.id, { state: !task.state });
     };
 
     return (
@@ -29,7 +29,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdate, onDelete, ha
             <div className="flex items-center gap-2">
                 <input
                     type="checkbox"
-                    checked={task.completed}
+                    checked={task.state}
                     onChange={toggleCompleted}
                     className="w-4 h-4 text-blue-500 rounded focus:ring-2 focus:ring-blue-500"
                 />
@@ -44,7 +44,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({ task, onUpdate, onDelete, ha
                     />
                 ) : (
                     <span
-                        className={`flex-1 cursor-pointer ${task.completed ? 'line-through text-gray-500' : ''
+                        className={`flex-1 cursor-pointer ${task.state ? 'line-through text-gray-500' : ''
                             }`}
                         onClick={toggleCompleted}
                     >

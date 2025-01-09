@@ -1,0 +1,1 @@
+interface updatedTask { title?: string, state?: boolean }

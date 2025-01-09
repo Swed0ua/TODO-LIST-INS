@@ -5,6 +5,7 @@ import { TodosHandlerInstance } from '../../../handlers/todosHandlers';
 import { RootState } from '../../../store/store';
 import { TodoList } from './components/TodoList';
 import MainBtn from '../../shared/MainBtn';
+import { TodoAdderComponent } from '../TodoAdderComponent';
 
 const TodosContainer: React.FC = () => {
   const dispatch = useDispatch();
@@ -15,32 +16,33 @@ const TodosContainer: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [newTodoName, setNewTodoName] = useState('');
 
-  useEffect(() => {
-    const fetchTodos = async () => {
-      dispatch(fetchTodosStart());
-      try {
-        if (userEmail) {
-          const todos = await TodosHandlerInstance.getTodoLists(userEmail);
-          console.log(todos);
+  const fetchTodos = async () => {
+    dispatch(fetchTodosStart());
+    try {
+      if (userEmail) {
+        const todos = await TodosHandlerInstance.getTodoLists(userEmail);
+        console.log(todos);
 
-          if (todos.data) dispatch(fetchTodosSuccess(todos.data));
-        }
-      } catch (error: any) {
-        console.error('Failed to fetch todos:', error);
+        if (todos.data) dispatch(fetchTodosSuccess(todos.data));
       }
-    };
+    } catch (error: any) {
+      console.error('Failed to fetch todos:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchTodos();
   }, [dispatch, userEmail]);
 
   const handleAddTodoList = async () => {
-    if (newTodoName.trim() === '') return; // Перевірка на порожнє значення
+    if (newTodoName.trim() === '') return;
 
     try {
-      if (uid) {
-        const newTodoList = await TodosHandlerInstance.createTodoList(newTodoName, uid);
+      if (uid && userEmail) {
+        const newTodoList = await TodosHandlerInstance.createTodoList(newTodoName, uid, userEmail);
         setNewTodoName(''); 
         setIsAdding(false); 
+        fetchTodos()
       }
     } catch (error: any) {
       console.error('Failed to create todo list:', error);
@@ -52,35 +54,13 @@ const TodosContainer: React.FC = () => {
       {userEmail ? (
         <>
           {todoLists.map((item) => (
-            <TodoList key={item.id} list={item} userEmail={userEmail} />
+            <TodoList key={item.id} list={item} userEmail={userEmail} fetchTodos={fetchTodos} />
           ))}
 
           {isAdding ? (
-            <div className="add-todo-form flex flex-col gap-2 mt-4">
-              <input
-                type="text"
-                value={newTodoName}
-                onChange={(e) => setNewTodoName(e.target.value)}
-                placeholder="Enter new Todo List name"
-                className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <div className="flex gap-2">
-                <MainBtn onClick={handleAddTodoList}>Add</MainBtn>
-                <button
-                  onClick={() => setIsAdding(false)}
-                  className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
+            <TodoAdderComponent handleAdd={handleAddTodoList} newTaskName={newTodoName} setNewTaskName={setNewTodoName} isAdding={isAdding} setIsAdding={setIsAdding} />
           ) : (
-            <button
-              onClick={() => setIsAdding(true)}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            >
-              Add New Todo List
-            </button>
+            <MainBtn addClassName={"mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"} onClick={() => setIsAdding(true)}>Add New Todo List</MainBtn>
           )}
         </>
       ) : (

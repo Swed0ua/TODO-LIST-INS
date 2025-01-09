@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class ToDoService {
     private todoListsCollection = collection(db, "todos");
 
-    async createTodoList(name: string, userId: string): Promise<void> {
+    async createTodoList(name: string, userId: string, userEmail:string): Promise<void> {
         try {
             const newDocRef = doc(this.todoListsCollection);
             await setDoc(newDocRef, {
@@ -14,7 +14,7 @@ export class ToDoService {
                 name,
                 createdBy: userId,
                 users: {
-                    [userId]: "Admin" 
+                    [userEmail]: "Admin" 
                 },
                 tasks: []
             });
@@ -33,6 +33,15 @@ export class ToDoService {
             return todoLists;
         } catch (error: any) {
             throw new Error("Failed to fetch To-Do Lists: " + error.message);
+        }
+    }
+
+    async deleteTodoList(todoListId: string): Promise<void> {
+        try {
+            const todoListRef = doc(this.todoListsCollection, todoListId);
+            await deleteDoc(todoListRef);
+        } catch (error: any) {
+            throw new Error("Failed to delete To-Do List: " + error.message);
         }
     }
 
@@ -100,19 +109,35 @@ export class ToDoService {
         }
     }
 
-    async deleteTodoList(todoListId: string): Promise<void> {
+    async updateTodoItem(todoListId: string, taskId: string, updatedTask: { title?: string, state?: boolean }): Promise<void> {
         try {
-            const todoListRef = doc(this.todoListsCollection, todoListId);
-            await deleteDoc(todoListRef);
-        } catch (error: any) {
-            throw new Error("Failed to delete To-Do List: " + error.message);
-        }
-    }
+            const todoListRef = doc(db, "todos", todoListId);
 
-    async updateTodoItem(): Promise<void> {
-        try {
-            
+            const docSnap = await getDoc(todoListRef);
+            const data = docSnap.data();
+
+            console.log("+5 ",data)
+
+            if (data && data.tasks) {
+                const taskIndex = data.tasks.findIndex((task: any) => task.id === taskId);
+
+                if (taskIndex !== -1) {
+                    const updatedTasks = [...data.tasks];
+                    updatedTasks[taskIndex] = { ...updatedTasks[taskIndex], ...updatedTask };
+
+                    await updateDoc(todoListRef, {
+                        tasks: updatedTasks,
+                    });
+
+                    console.log('Task updated successfully!');
+                } else {
+                    throw new Error("Task not found.");
+                }
+            } else {
+                throw new Error("Todo list not found or has no tasks.");
+            }
         } catch (error: any) {
+            throw new Error("Failed to update list item: " + error.message);
         }
     }
 
@@ -132,10 +157,23 @@ export class ToDoService {
         }
     }
 
-    async deleteTodoItem(): Promise<void> {
+    async deleteTodoItem(taskId: string, todoListId: string): Promise<void> {
         try {
-            
+            const todoListRef = doc(db, "todos", todoListId);
+            const docSnap = await getDoc(todoListRef);
+            const data = docSnap.data();
+
+            const taskToRemove = data?.tasks.find((task: any) => task.id === taskId);
+
+            if (taskToRemove) {
+                await updateDoc(todoListRef, {
+                    tasks: arrayRemove(taskToRemove),
+                });
+            } else {
+                throw new Error("Task not found.");
+            }
         } catch (error: any) {
+            throw new Error("Failed to remove list item: " + error.message);
         }
     }
 }

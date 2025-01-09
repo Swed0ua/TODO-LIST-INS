@@ -24,12 +24,22 @@ export class TodosHandler {
         }
     }
 
-    async createTodoList(userId: string, listName: string): Promise<boolean> {
+    async createTodoList(userId: string, listName: string, userEmail: string): Promise<boolean> {
         try {
-            const newList = await this.todosService.createTodoList(userId, listName);
+            const newList = await this.todosService.createTodoList(userId, listName, userEmail);
             return true;
         } catch (error: any) {
             console.error('Error creating Todo List:', error.message);
+            return false;
+        }
+    }
+
+    async deleteTodoList(todoListId: string): Promise<boolean> {
+        try {
+            await this.todosService.deleteTodoList(todoListId);
+            return true;
+        } catch (error: any) {
+            console.error('Error deleting Todo List:', error.message);
             return false;
         }
     }
@@ -44,22 +54,22 @@ export class TodosHandler {
         }
     }
 
-    async deleteTodoItem(todoListId: string): Promise<boolean> {
+    async updateTodoItem(todoListId:string, taskId:string, updatedTask:updatedTask): Promise<boolean> {
         try {
-            await this.todosService.deleteTodoList(todoListId);
+            await this.todosService.updateTodoItem(todoListId, taskId, updatedTask);
             return true;
         } catch (error: any) {
-            console.error('Error creating Todo List:', error.message);
+            console.error('Error creating Todo List item:', error.message);
             return false;
         }
     }
 
-    async updateTodoItem(todoListId: string): Promise<boolean> {
+    async deleteTodoItem(taskId:string, todoListId:string): Promise<boolean> {
         try {
-            await this.todosService.deleteTodoList(todoListId);
+            await this.todosService.deleteTodoItem(taskId, todoListId);
             return true;
         } catch (error: any) {
-            console.error('Error creating Todo List:', error.message);
+            console.error('Error deleting Todo List item:', error.message);
             return false;
         }
     }

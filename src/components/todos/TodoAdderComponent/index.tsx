@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import MainBtn from '../../shared/MainBtn';
 
 interface TodoAdderComponentProps {
     handleAdd: () => void;
@@ -9,7 +10,6 @@ interface TodoAdderComponentProps {
 }
 
 export const TodoAdderComponent: React.FC<TodoAdderComponentProps> = ({ handleAdd, newTaskName, isAdding, setNewTaskName, setIsAdding }) => {
-
     return (
         <div className="add-task-section mt-4">
             {isAdding ? (
@@ -22,27 +22,12 @@ export const TodoAdderComponent: React.FC<TodoAdderComponentProps> = ({ handleAd
                         className="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <div className="flex gap-2">
-                        <button
-                            onClick={()=> handleAdd()}
-                            className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                        >
-                            Add Task
-                        </button>
-                        <button
-                            onClick={() => setIsAdding(false)}
-                            className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                        >
-                            Cancel
-                        </button>
+                        <MainBtn onClick={() => handleAdd()} addClassName='px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600'>Add</MainBtn>
+                        <MainBtn onClick={() => setIsAdding(false)} addClassName='px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600'>Cancel</MainBtn>
                     </div>
                 </div>
             ) : (
-                <button
-                    onClick={() => setIsAdding(true)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                >
-                    Add New Task
-                </button>
+                <MainBtn onClick={() => setIsAdding(true)} addClassName="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Add New Task</MainBtn>
             )}
         </div>
     );
