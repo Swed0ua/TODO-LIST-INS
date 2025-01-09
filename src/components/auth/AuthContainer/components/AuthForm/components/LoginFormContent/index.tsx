@@ -8,7 +8,7 @@ import { login } from '../../../../../../../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 
-const LoginFormContent: React.FC = () => {
+const LoginFormContent: React.FC<AuthFormContentProps> = ({ setErrorText }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch()
@@ -18,13 +18,19 @@ const LoginFormContent: React.FC = () => {
         e.preventDefault();
         const user: LoginData = { email, password};
         try {
-            const registerResponse = await AuthHandlerInstance.loginUser(user);
-            if (registerResponse) {
+            const loginResponse = await AuthHandlerInstance.loginUser(user);
+            console.log("loginResponse", loginResponse)
+            if (loginResponse.success && loginResponse.data) {
                 dispatch(login({ 
-                    userEmail: registerResponse.userEmail, 
-                    displayName: registerResponse.displayName 
+                    userEmail: loginResponse.data.userEmail, 
+                    displayName: loginResponse.data.displayName,
+                    providerId: loginResponse.data.providerId
                 }));
                 navigate('/');
+            } else {
+                if (loginResponse.error) {
+                    setErrorText(loginResponse.error)
+                }
             }  
         } catch (error: any) {
             console.error('Registration error:', error.message);

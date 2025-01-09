@@ -1,5 +1,5 @@
 import { AuthService } from "../services/authService/authService";
-import { AuthResponse, LoginData, User } from "../types/userModel";
+import { AuthResponse, AuthResult, LoginData, User } from "../types/userModel";
 
 export class AuthHandler {
     private authService: AuthService;
@@ -9,24 +9,37 @@ export class AuthHandler {
     }
 
     // Registration processing
-    async registerUser(user: User): Promise<AuthResponse | undefined> {
+    async registerUser(user: User): Promise<AuthResult> {
         try {
             const registerCredential = await this.authService.register(user);
             console.log('Registration successful', registerCredential.displayName);
-            return registerCredential
+            return {
+                success:true,
+                data:registerCredential
+            }
         } catch (error:any) {
             console.error(error.message);
+            return {
+                success: false,
+                error:error.message
+            }
         }
     }
 
     // Login processing
-    async loginUser(user: LoginData): Promise<AuthResponse | undefined>  {
+    async loginUser(user: LoginData): Promise<AuthResult>  {
         try {
             const loginCredential = await this.authService.login(user);
             console.log('Login successful', loginCredential.displayName);
-            return loginCredential
+            return {
+                success:true,
+                data:loginCredential
+            }
         } catch (error:any) {
-            console.error(error.message);
+            return {
+                success: false,
+                error:error.message
+            }
         }
     }
 

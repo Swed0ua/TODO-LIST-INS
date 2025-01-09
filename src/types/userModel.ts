@@ -12,7 +12,14 @@ export interface LoginData {
 export interface AuthResponse {
   userEmail: string | null;
   displayName: string | null;
+  providerId: string | null;
 }
+
+export interface AuthResult {
+  success: boolean;
+  data?: AuthResponse;
+  error?: string;
+};
 
 // Elements
 export enum InputTypes {

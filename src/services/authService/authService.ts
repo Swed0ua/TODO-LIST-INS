@@ -13,7 +13,8 @@ export class AuthService {
 
             return {
                 userEmail: firebaseUser.email,
-                displayName: firebaseUser.displayName
+                displayName: firebaseUser.displayName,
+                providerId: firebaseUser.providerId
             };
 
         } catch (error:any) {
@@ -26,7 +27,8 @@ export class AuthService {
             const userCredential = await signInWithEmailAndPassword(auth, user.email, user.password);
             return {
                 userEmail: userCredential.user.email,
-                displayName: userCredential.user.displayName
+                displayName: userCredential.user.displayName,
+                providerId: userCredential.user.providerId
             };
         } catch (error:any) {
             throw new Error('Login failed: ' + error.message);

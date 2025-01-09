@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../store/store";
 import { AuthHandlerInstance } from "../../../handlers/authHandlers";
 import { logout } from '../../../store/authSlice';
+import MainBtn from "../MainBtn";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -48,8 +49,8 @@ const Header: React.FC = () => {
       
       <div>
           {isAuthenticated ?
-            <button onClick={logOutHandler} className="hover:bg-slate-500 text-white font-medium py-2 px-4 rounded transition-all duration-200">LogOut</button>:
-            <button onClick={goToLogin} className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition-all duration-200">LogIn</button> 
+            <MainBtn onClick={logOutHandler} addClassName="bg-transparent hover:bg-slate-500">LogOut</MainBtn>:
+            <MainBtn onClick={goToLogin}>LogIn</MainBtn> 
           }
       </div>
     </div>
