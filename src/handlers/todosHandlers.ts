@@ -34,9 +34,9 @@ export class TodosHandler {
         }
     }
 
-    async deleteTodoList(todoListId: string): Promise<boolean> {
+    async addTodoListItem(todoListId: string, itemText:string): Promise<boolean> {
         try {
-            await this.todosService.deleteTodoList(todoListId);
+            await this.todosService.addTodoItem(todoListId, itemText);
             return true;
         } catch (error: any) {
             console.error('Error creating Todo List:', error.message);

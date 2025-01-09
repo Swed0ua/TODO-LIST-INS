@@ -1,6 +1,7 @@
 import { db } from "../../firebase/firebase-config";
 import { collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { TodoListResponce } from "../../types/todosModel";
+import { v4 as uuidv4 } from 'uuid';
 
 export class ToDoService {
     private todoListsCollection = collection(db, "todos");
@@ -122,11 +123,12 @@ export class ToDoService {
                 tasks: arrayUnion({
                     title: taskTitle,
                     state: false,
-                    id:""
+                    id: uuidv4()
                 }),
             });
             
         } catch (error: any) {
+            throw new Error("Failed to add new list item: " + error.message);
         }
     }
 

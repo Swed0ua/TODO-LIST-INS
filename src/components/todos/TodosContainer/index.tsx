@@ -41,7 +41,6 @@ const TodosContainer: React.FC = () => {
         const newTodoList = await TodosHandlerInstance.createTodoList(newTodoName, uid);
         setNewTodoName(''); 
         setIsAdding(false); 
-
       }
     } catch (error: any) {
       console.error('Failed to create todo list:', error);
