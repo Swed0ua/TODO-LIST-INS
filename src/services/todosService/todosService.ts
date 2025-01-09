@@ -1,4 +1,3 @@
-import { getAuth } from "firebase/auth";
 import { db } from "../../firebase/firebase-config";
 import { collection, doc, setDoc, getDoc, getDocs, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { TodoListResponce } from "../../types/todosModel";
@@ -93,7 +92,7 @@ export class ToDoService {
         try {
             const todoListRef = doc(this.todoListsCollection, todoListId);
             await updateDoc(todoListRef, {
-                [`users.${userId}`]: deleteDoc // Видаляємо користувача
+                [`users.${userId}`]: deleteDoc 
             });
         } catch (error: any) {
             throw new Error("Failed to remove user access: " + error.message);
