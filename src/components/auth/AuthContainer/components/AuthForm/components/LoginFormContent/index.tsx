@@ -24,7 +24,7 @@ const LoginFormContent: React.FC<AuthFormContentProps> = ({ setErrorText }) => {
                 dispatch(login({ 
                     userEmail: loginResponse.data.userEmail, 
                     displayName: loginResponse.data.displayName,
-                    providerId: loginResponse.data.providerId
+                    uid: loginResponse.data.uid
                 }));
                 navigate('/');
             } else {

@@ -24,7 +24,7 @@ const RegistrationFormContent: React.FC<AuthFormContentProps> = ({ setErrorText 
               dispatch(login({ 
                   userEmail: registerResponse.data.userEmail, 
                   displayName: registerResponse.data.displayName,
-                  providerId: registerResponse.data.providerId
+                  uid: registerResponse.data.uid
               }));
               navigate('/');
           } else {

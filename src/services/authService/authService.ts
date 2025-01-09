@@ -1,8 +1,9 @@
 import { AuthResponse, LoginData, User } from "../../types/userModel";
 import { auth } from '../../firebase/firebase-config';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
 
 export class AuthService {
+    private auth = getAuth();
 
     async register(user: User): Promise<AuthResponse> {
         try {
@@ -14,7 +15,7 @@ export class AuthService {
             return {
                 userEmail: firebaseUser.email,
                 displayName: firebaseUser.displayName,
-                providerId: firebaseUser.providerId
+                uid: firebaseUser.uid
             };
 
         } catch (error:any) {
@@ -28,7 +29,7 @@ export class AuthService {
             return {
                 userEmail: userCredential.user.email,
                 displayName: userCredential.user.displayName,
-                providerId: userCredential.user.providerId
+                uid: userCredential.user.uid
             };
         } catch (error:any) {
             throw new Error('Login failed: ' + error.message);

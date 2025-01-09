@@ -12,7 +12,7 @@ export interface LoginData {
 export interface AuthResponse {
   userEmail: string | null;
   displayName: string | null;
-  providerId: string | null;
+  uid: string | null;
 }
 
 export interface AuthResult {

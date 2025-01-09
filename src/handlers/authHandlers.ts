@@ -1,5 +1,5 @@
 import { AuthService } from "../services/authService/authService";
-import { AuthResponse, AuthResult, LoginData, User } from "../types/userModel";
+import { AuthResult, LoginData, User } from "../types/userModel";
 
 export class AuthHandler {
     private authService: AuthService;
